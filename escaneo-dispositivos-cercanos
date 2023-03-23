@@ -1,0 +1,10 @@
+#!/bin/bash
+function pause(){
+ read -s -n 1 -p "Press any key to continue . . ."
+ echo ""
+}
+
+sudo nmap -sn $1 | awk '/report/ {print $5}'
+pause
+
+sudo netdiscover -r $1

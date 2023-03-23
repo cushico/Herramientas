@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cd $2
+echo "creando el archivo puertos.txt"
+echo "escaneando todos los puertos abiertos"
+echo "puerto|statu|service|version         |">puertos.txt
+echo "">>puertos.txt
+sudo nmap -Pn -sC -sV -p1-65535 $1 -v | grep open | grep Discovered -v | grep tcp | awk -F ":" '{print $1"\t"$2"\t"$3}'
+
+#todos los puertos
+echo "Escaneo general de todas las vulnerabilidades"
+echo "creando el archivo vuln.txt"
+PORTS=$(cat puertos.txt |grep open |grep tcp | awk '{print $1}' FS=/ | xargs | tr ' ' ',')
+nmap --script vuln -p $PORTS $1 -v -F -o vuln.txt 
+
+
